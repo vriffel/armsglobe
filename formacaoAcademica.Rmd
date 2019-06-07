@@ -1,3 +1,8 @@
+---
+output: html_document
+---
+
+```{r}
 library(RColetum)
 library(tidyverse)
 
@@ -18,6 +23,7 @@ str(resp[[2]])
 ## Adicona nome
 names(resp)
 names(resp) <- c("a","b")
+names(resp)
 
 ## Seleciona colunas de interesse
 da <- resp[[1]][,2:11]
@@ -36,6 +42,9 @@ names(da3) <- "Conhecimento ou Experiência em Estatística"
 names(da)[4] <- "Cidade-UF  De  Residencia"
 names(da)[8] <- "Atuacao/posicao/cargo"
 names(da)[9] <- "Empresa/instituicao  Em  Que  Trabalha"
+names(da)
+names(da2)
+names(da3)
 
 ## Corrige a formação acadêmica
 setwd("/home/dsbd/Desktop/est/DSBD/precadastro/")
@@ -55,38 +64,38 @@ dim(da);class(da)
 ## Encontrando os cursos de maiores frequência
 da.tb <- table(da$`Formacao Academica`)
 da.tb <- sort(da.tb,decreasing = T)
+da.tb
 
 ## Encontra faixa etária de maior frequência
 db.tb <- table(da$`Faixa Etaria`)
-aux <- db.tb
-aux <- aux[-2]
-aux[5] <- db.tb[2]
-names(aux)[5] <- "> 40"
-db.tb <- aux
+db.tb <- sort(db.tb,decreasing = T)
 ## Variáveis para plot
-dbnames <- factor(names(db.tb),levels=names(db.tb))
-dbvalue <- as.numeric(db.tb)
+dbnames <- names(db.tb)[1:5]
+dbvalue <- as.numeric(db.tb)[1:5]
+db.tb
 
 ## Tempo de trabalho com dsbd
 dc <- da$`Tempo Em Anos Em Que Trabalha Com Big Data Ou Data Science`
 dc.tb <- sort(table(dc),decreasing =T)
+dc.tb
 
 ## Encontra de cargo maior frquência
 dd.tb <- table(dd)
-dd.tb <- sort(dd.tb,decreasing = T)[1:5]
+dd.tb <- sort(dd.tb,decreasing = T)
 ## Variáveis para plot
-ddnames <- names(dd.tb)
+ddnames <- names(dd.tb[1:5])
 ddnames <- str_to_title(ddnames)
-ddnames <- ordered(ddnames,levels=ddnames)
-ddvalue <- as.numeric(dd.tb)
+ddvalue <- as.numeric(dd.tb)[1:5]
+dd.tb
 
 ## Experiencia
 da <- da %>% mutate(
   Experiencia = 2019 - da$`Ano De Obtencao Do Titulo De Graduacao`
-)
+  )
 ## Verifica erros
 da$Experiencia[which(da$Experiencia < 0)] <- NA
 da$Experiencia[which(da$Experiencia > 100)] <- NA
+da$Experiencia
 
 ## Conhecimento de línguagem de programação
 de <- da2$`Conhecimento Básico de Línguagem de Programação e Recursos Computacionais`
@@ -94,13 +103,14 @@ de <- da2$`Conhecimento Básico de Línguagem de Programação e Recursos Comput
 de <- str_to_lower(de)
 ## Tabela de Frequência
 de.tb <- table(de)
-de.tb <- sort(de.tb,decreasing = TRUE)[1:11]
-de.tb <- de.tb[-which(names(de.tb) == "outras")]
+de.tb <- sort(de.tb,decreasing = TRUE)
+names(de.tb)[7] <- "outra"
 ## Arruma os dados para plot
-denames <- names(de.tb)
+aux2 <- c(de.tb[1:8],outras = sum(de.tb[-1:-8]))
+denames <- names(aux2)
 denames <- str_to_title(denames)
-denames <- factor(denames,levels = denames)
-devalue <- as.numeric(de.tb)
+devalue <- as.numeric(aux2)
+de.tb
 
 ## Conhecimento em Estatística
 df <- da3$`Conhecimento ou Experiência em Estatística`
@@ -116,6 +126,7 @@ dfnames <- names(df.tb)
 dfnames <- str_wrap(dfnames,20)
 dfnames <- str_to_title(dfnames)
 dfvalue <- as.numeric(df.tb)
+df.tb
 
 ## Gráficos
 #############################
@@ -124,11 +135,11 @@ dfvalue <- as.numeric(df.tb)
 fac <- factor(x = da$`Faixa Etaria`,
               levels = c("< 25", "25 - 30", "31 - 35", "36 - 40", "> 40"))
 
-faixa <- list()
+faixa <- 0
 k <- 1
 
 ## Filtra a formação acadêmica por nivel da faixa etária
-for(j in 1:10){
+for(j in 1:5){
   for(i in 1:5){
     faixa[k] <- list(
       da %>% filter(
@@ -136,29 +147,25 @@ for(j in 1:10){
           `Faixa Etaria` == levels(fac)[i]))
     k <- k+1
   }
-  i <- 1
 }
 
 faixa.tb <- 0
 ## Tabela de frequências da formação acadêmica por nível da faixa etária
-for(i in 1:50){
+for(i in 1:25){
   faixa.tb[i] <- length(faixa[[i]]$`Formacao Academica`)
 }
+
 aux <- as.data.frame(faixa.tb)
 ## Cria uma matriz com os dados
 data <- matrix(c(as.numeric(aux[1:5,]),
                  as.numeric(aux[6:10,]),
                  as.numeric(aux[11:15,]),
                  as.numeric(aux[16:20,]),
-                 as.numeric(aux[21:25,]),
-                 as.numeric(aux[26:30,]),
-                 as.numeric(aux[31:35,]),
-                 as.numeric(aux[36:40,]),
-                 as.numeric(aux[41:45,]),
-                 as.numeric(aux[46:50,])),
+                 as.numeric(aux[21:25,])),
                byrow = F,nrow=5)
 rownames(data) <- levels(fac)
-colnames(data) <- names(da.tb[1:10])
+colnames(data) <- names(da.tb[1:5])
+data
 
 ## Transforma os dados para tibble
 data2 <- data
@@ -168,34 +175,29 @@ data2 <- gather(data2)
 ## Adiciona marcação conforme faixa etária
 data2 <- cbind(data2,levels(fac))
 names(data2) <- c("Formacao Academica","Freq","Faixa Etaria")
-data2$`Faixa Etaria` <- factor(data2$`Faixa Etaria`, 
-       levels = c("< 25", "25 - 30", "31 - 35", "36 - 40", "> 40"))
+data2
 
 ## Cálcula o total por nível de faixa etária
-soma <- as.data.frame(da.tb[1:10])
-soma <- as_tibble(soma)
-data2$`Formacao Academica` <- factor(data2$`Formacao Academica`, levels = soma$Var1)
+soma <- data2 %>%
+  group_by(data2$"Formacao Academica") %>%
+  summarise(value = sum(Freq))
+## Transforma a variável para cálculo de porcentagem
+soma <- rep(soma$value,5)
+soma <- sort(soma,decreasing = TRUE)
 ## Cálculo de porcentagem
-soma2 <- 0
-for(i in 1:length(soma$Freq)){
-  soma2[i] <- list(rep(soma$Freq[i],5)) 
-}
-soma2 <- unlist(soma2)
-percent <- (data2$"Freq"/soma2)
+percent <- (data2$"Freq"/soma)
 percent <- round(percent, 2) * 100
 ## Adiciona a coluna de porcentagem aos dados
 data3 <- data2
 data3 <- cbind(data3,percent)
 data3$percent <- paste0(percent, "%")
-for(i in 1:length(data3$percent)){
-  if(data3$percent[i] == "0%"){
-    data3$percent[i] <- NA
-  }
-}
+## Para remover número no plot
+data3$percent[25] <- NA
+data3
 
 ## Faz o plot
 fill <- c("#a4d6df", "#78c2d0", "#4caec1", "#368c9c", "#276570")
-p1 <- ggplot(data = data2,
+ggplot(data = data2,
        aes(x = data2$"Formacao Academica", y = data2$"Freq",
            fill = data2$"Faixa Etaria")) +
   geom_bar(stat = "identity")+
@@ -206,23 +208,22 @@ p1 <- ggplot(data = data2,
   labs(x = "Curso", y = "Frequência")+
   ggtitle("Frequência de Curso por Faixa Etária")+
   scale_fill_manual(values = fill)+
-  scale_x_discrete(labels=c("Estatística","Sistemas de\nInformação","TADS",
-                            "Administração","Ciências\n Econômicas","Ciência da\nComputação",
-                            "Engenharia de\nComputação", "Engenharia\nElétrica","Engharia Química",
-                            "Gestão da\nInformação"))+
   theme(axis.text.x = element_text(face = "bold", colour = "black"))+
+  scale_x_discrete(labels = c("Administração", "Análise e Desenvolvimento\n de Sistemas",
+                            "Ciências Econômicas", "Estatística", "Sistemas de Informação"))+
   theme(axis.line = element_line(size = 1, colour = "black"),
         panel.grid.major = element_line(colour = "#d3d3d3"),
         panel.grid.minor = element_blank(), panel.border = element_blank(),
         panel.background = element_blank()) +
   theme(plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
         text=element_text(family = "Tahoma"),
-        axis.text.x = element_text(colour = "black", size = 9),
+        axis.text.x = element_text(colour = "black", size = 10),
         axis.text.y = element_text(colour = "black", size = 10))+
   theme(panel.background = element_rect(fill = '#f4fffb', colour = 'black'))+
   guides(fill = guide_legend(title = "Faixa Etária"))
+
 #############################
-p2 <- ggplot()+
+ggplot()+
   geom_bar(aes(x = dbnames, y = dbvalue), stat = "identity",
            fill = c("#a4d6df"), color = "black")+
   geom_text(aes(x = dbnames, y=dbvalue, vjust = -0.5, label = dbvalue))+
@@ -240,7 +241,7 @@ p2 <- ggplot()+
   theme(panel.background = element_rect(fill = '#f4fffb', colour = 'black'))
 
 #############################
-p3 <- ggplot(data = da, aes(da$`Tempo Em Anos Em Que Trabalha Com Big Data Ou Data Science`))+
+ggplot(data = da, aes(da$`Tempo Em Anos Em Que Trabalha Com Big Data Ou Data Science`))+
   geom_histogram(breaks = seq(0,15, by = 3), col = "black", fill = I("light blue"))+
   labs(x = "Tempo (anos)", y = "Frequência")+
   ggtitle("Tempo de trabalho com DSBD")+
@@ -257,7 +258,7 @@ p3 <- ggplot(data = da, aes(da$`Tempo Em Anos Em Que Trabalha Com Big Data Ou Da
   theme(panel.background = element_rect(fill = '#f4fffb', colour = 'black'))
 
 #############################
-p4 <- ggplot(data = da, aes(da$Experiencia)) +
+ggplot(data = da, aes(da$Experiencia)) +
   geom_histogram(breaks = seq(0, 30, by = 5), col="black", fill = I("light blue"))+
   labs(x = "Tempo (anos)", y = "Frequência")+
   ggtitle("Anos após obtenção do título de graduação")+
@@ -274,7 +275,7 @@ p4 <- ggplot(data = da, aes(da$Experiencia)) +
   theme(panel.background = element_rect(fill = '#f4fffb', colour = 'black'))
 
 #############################
-p5 <- ggplot()+
+ggplot()+
     geom_bar(aes(x = ddnames, y = ddvalue), stat = "identity",
              fill = c("#a4d6df"), color = "black")+
   geom_text(aes(x = ddnames, y = ddvalue, vjust = -0.5, label = ddvalue))+
@@ -292,8 +293,8 @@ p5 <- ggplot()+
   theme(panel.background = element_rect(fill = '#f4fffb', colour = 'black'))
 
 #############################
-p6 <- ggplot()+
-    geom_bar(aes(x = denames,
+ggplot()+
+    geom_bar(aes(x = reorder(denames, devalue),
                  y = devalue), stat = "identity",
            fill = c("#a4d6df"), color = "black")+
   geom_text(aes(x = denames, y = devalue, vjust = -0.5,
@@ -312,8 +313,8 @@ p6 <- ggplot()+
   theme(panel.background = element_rect(fill = '#f4fffb', colour = 'black'))
 
 #############################
-p7 <- ggplot()+
-    geom_bar(aes(x = reorder(dfnames, -dfvalue), y = dfvalue),
+ggplot()+
+    geom_bar(aes(x = reorder(dfnames, dfvalue), y = dfvalue),
              stat = "identity", fill = c("#a4d6df"), color = "black")+
   geom_text(aes(x = dfnames, y = dfvalue, vjust = -0.5, label = dfvalue))+
   labs(x = "Línguagem", y = "Frequência")+
@@ -328,4 +329,5 @@ p7 <- ggplot()+
         axis.text.x = element_text(colour = "black", size = 8),
         axis.text.y = element_text(colour = "black", size = 10))+
   theme(panel.background = element_rect(fill = '#f4fffb', colour = 'black'))
-p7
+
+```
