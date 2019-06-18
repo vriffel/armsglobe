@@ -1,0 +1,282 @@
+---
+title: "Avaliação do Programa de Especialização em Data Science e Big Data - Turma 20XX"
+author: "Coordenação DSBD"
+date: "Fevereiro 20XX"
+output: html_document
+---
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE}
+#source(file =  "/home/dsbd/Desktop/myFuncs.R")
+#analise2(nome = "0?/2018")
+source(file =  "/home/dsbd/Desktop/funcsAux.R")
+n <- analise2()
+```
+# Introdução
+
+Com o objetivo de investigar a adequação e qualidade das atividades
+didático-pedagógicas desenvolvidas no ano letivo de 20**XX**,
+o programa de especialização em Data Science e Big Data através de sua
+coordenação conduziu uma avaliação junto aos alunos regularmente matrículados
+no programa. A avaliação consistiu na aplicação de um questionário com
+$50$ questões, conforme descrito em detalhes na próxima seção.
+
+A avaliação das atividades do primeiro semestre foi realizada entre 
+**XX** de Julho a **XX** de Agosto de 20**XX**, enquanto que as atividades
+do segundo semestre foram avaliadas entre **XX** de Janeiro e **XX** de 
+Fevereiro de 20**XX** do [Coletum](https://coletum.com), uma plataforma de
+formulários online. O Coletum permite o rápido desenvolvimento
+de formulários, bem como, integra tecnologias para a exportação dos
+resultados para diversos formatos, como PDF, Excel e CSV. Recentemente
+foi desenvolvido o pacote 
+[RColetum](https://cran.r-project.org/web/packages/RColetum/index.html),
+que permite importar os resultados de um formulário diretamente para o
+$\texttt{R}$, através de uma API.
+
+Os alunos foram avisados pela coordenação da existência da avaliação
+através do grupo da turma no whatsapp e via e-mail. O preenchimento
+foi voluntário e anônimo. Dos **COLOCAR_NUMERO_DE_ALUNOS_MATRICULADOS** alunos matriculados no programa
+`r n[1]` responderam ao questionário no primeiro semestre e `r n[2]` no segundo
+semestre.
+
+O objetivo desta avaliação foi verificar a percepção dos alunos com relação
+aos seguintes aspectos do curso: Qualidade do corpo e práticas docentes,
+interesse dos alunos, interação Professores-Alunos, pertinência do conteúdo 
+do curso e organização do curso. A partir desta avaliação a coordenação 
+pretende propor novas estratégias para melhorar a qualidade do curso, 
+visando seu crescimento e visibilidade.
+
+Na próxima seção apresentamos o instrumento de avaliação. Na sequência
+apresentamos brevemente os principais resultados.
+Este relatório termina com indicações de ações à serem tomadas pela
+coordenação para a próxima edição do curso.
+
+# Descrição do instrumento de pesquisa
+
+O instrumento de pesquisa foi adaptado de Cunha, Gomes e Beck (2016) e
+busca mensurar a percepção dos alunos com relação a cinco aspectos:
+
+- Qualidade do corpo e práticas docentes;
+- Interesse dos alunos;
+- Interação Professores-Alunos;
+- Pertinência do conteúdo do curso;
+- Organização do curso.
+
+Cada aspecto conta com um conjunto específico de questões, onde
+a avaliação é feita em uma escala de 1 a 5, sendo que 1 representa
+**total discordância** e 5 **total concordância**.
+Abaixo apresenta-se o conjunto de questões que compõe a avaliação de cada aspecto.
+
+- Qualidade do corpo e práticas docentes
+    a) Os professores apresentam o conteúdo de forma entusiasmada.
+    b) Os professores parecem interessados ao ensinar.
+    c) Os exemplos utilizados pelos professores auxiliam na compreensão do conteúdo.
+    d) Os professores procuram saber se o estudante aprendeu o conteúdo.
+    e) Os professores procuram relacionar a teoria com a prática profissional.
+    f) Os professores são qualificados profissionalmente.
+    g) De maneira geral, avalio de forma positiva o desempenho dos professores.
+
+- Interesse dos alunos
+    a) Você se sente interessado em aprender o conteúdo desta disciplina.
+    b) Geralmente, você fica atento em sala de aula.
+    c) Você sente que esta disciplina lhe desafia intelectualmente.
+    d) Você acredita que esta disciplina esta ajudando você a se tornar mais competente na área de Ciência de dados.
+    e) Geralmente você participa das discussões em sala de aula.
+    f) De maneira geral, estou interessado e participo ativamente desta disciplina.
+
+- Interação Professores-Alunos
+    a) Os professores encorajam os alunos a expressarem suas opiniões.
+    b) Os professores são receptivos a novas ideias e diferentes pontos de vista.
+    c) Os estudantes têm oportunidade para fazerem perguntas.
+    d) Os professores geralmente estimulam a discussão em sala de aula.
+    e) Os professores disponibilizam aos alunos materiais de estudo sobre as aulas dadas.
+    f) Os professores avaliam seus alunos com precisão e justiça.
+    g) É permitido aos alunos contatar os professores fora do horário de aula.
+    h) De maneira geral, a interação aluno professor é positiva.
+
+- Pertinência do conteúdo do curso
+    a) A quantidade dos conteúdos abordados na disciplina é adequada.
+    b) O tempo utilizado para cada conteúdo é adequado.
+    c) As leituras indicadas para os conteúdos ministrados são apropriadas.
+    d) Os trabalhos-exercícios indicados são adequados aos conteúdos abordados na disciplina.
+    e) De maneira geral, a disciplina atende às minhas expectativas.
+
+- Qualidade e organização do curso
+    a) Os materiais utilizados pelos professores são de boa qualidade.
+    b) Os professores trabalham todos os conteúdos previstos nas ementas das disciplinas.
+    c) Os professores relacionam os conteúdos com as demais disciplinas do Curso.
+    d) O Curso é bem organizado.
+    e) Geralmente a Coordenação do Curso assegura o bom andamento do Curso.
+    f) De maneira geral, a organização e a estrutura do Curso são adequadas.
+
+Por fim, foram avaliadas condições gerais do programa e aspectos 
+relacionados a infraestrutura dos ambientes pedagógicos. 
+As questões foram dividas em dois grupos: 
+Avaliação geral do Curso DSBD e Infraestrutura dos
+ambientes pedagógicos (salas de aula, laboratórios, biblioteca).
+As questões que compõem cada grupo são apresentadas abaixo:
+
+- Avaliação geral do Curso DSBD
+    a) De maneira geral, estou satisfeito com o Curso.
+    b) Eu planejo contribuir de alguma forma com o Curso após terminar a especialização.
+    c) Fora do ambiente da Universidade, quando converso com outras pessoas, eu digo coisas positivas a respeito do Curso.
+    d) Eu recomendaria o Curso de Especialização DSBD para um amigo.
+    e) Os conhecimentos adquiridos com a realização do Curso contribuíram para uma melhor execução de minhas atividades no ambiente de trabalho.
+    f) Tenho autonomia para propor melhorias na execução do meu trabalho.
+    g) A chefia imediata incentivou minha participação no Curso.
+    h) Sinto que a UFPR valoriza a realização deste Curso.
+    i) A participação na Especialização me proporcionou novas oportunidades profissionais.
+
+- Infraestrutura dos ambientes pedagógicos (salas de aula, laboratórios, biblioteca)
+    a) Limpeza e conservação.
+    b) Iluminação.
+    c) Climatização (ventilação/refrigeração).
+    d) Tamanho da sala.
+    e) Conforto do mobiliário (cadeiras, mesas, móveis, etc.).
+    f) Acessibilidade para pessoas com deficiência.
+    g) Acervo da biblioteca (quantidade e qualidade dos livros disponíveis).
+    h) Quantidade de equipamentos (computadores) em relação ao número de alunos.
+    i) Experiência do período do intervalo e café.
+
+# Resultados
+
+Neste seção apresentamos os principais resultados da avaliação na
+forma de gráficos de barras. O curso conta com seis disciplinas, sendo
+três no primeiro semestre, Inferência Estatística para Ciência de dados (IE),
+Infraestrutura computational (IC) e Linguagens de programação (LP)
+e três no segundo semestre (ML) Mineração de dados e aprendizado de
+máquina, (ME) Modelos Estatísticos e (PB) Processamento de Big Data.
+Para facilitar vamos descrever os resultados primeiro de forma
+geral para os cinco fatores avaliados por disciplina. Na sequência
+apresentamos os resultados de cada questão por fator avaliado e disciplina.
+
+![Média geral por aspecto de avaliação e disciplina.](media_geral_disciplinas.png)
+
+De forma geral todos os aspectos avaliados foram considerados pelo menos
+muito bom pelos alunos, ou seja, as avaliações médias ficaram em praticamente
+todos os casos acima de $4$. A interação professor-aluno foi o aspecto
+melhor avaliado, enquanto que a pertinência do conteúdo do curso foi o
+que apresentou a pior avaliação. Porém, ainda acima de $4$ para quatro
+das seis disciplinas e próximo a $4$ para linguagens de programação e 
+processamento de big data.
+O destaque fica por conta da disciplina Mineração de dados e Aprendizagem
+de máquina que apresenta as melhores avaliações em todos os fatores avaliados.
+Na sequência investigamos, em detalhes
+cada um dos aspectos levados em consideração na avaliação.
+
+## Qualidade do corpo e práticas docentes
+
+A Figura abaixo apresenta a nota média por questão que compõe o fator
+Qualidade do corpo e práticas docentes.
+
+![Qualidade do corpo e práticas docentes](media1.png)
+
+Os resultados mostram que a qualificação do corpo docente é claramente
+uma característica que os alunos avaliaram positivamente. De forma geral,
+as seis disciplinas tiveram avaliações similares com a maioria das notas médias acima de 4. Esses resultados mostram que os alunos estão satisfeitos com o desempenho do corpo docente. 
+Entretanto, os resultados também indicam que os professores devem enfatizar o relacionamento entre a teoria e a prática. Principalmente nas disciplinas de Inferência Estatística e Linguagens de programação. Este resultado é natural, sendo estas duas disciplinas prioritariamente de embasamento matemático e computacional, respectivamente.
+Outro ponto importante é fazer uso de ferramentas de avaliação em que
+o aluno tenha um retorno (talvez imediato) de seu desempenho indicando
+os pontos em que deve melhorar. A ideia do uso de ferramentas para avaliações sistemáticas é melhorar o conhecimento dos professores sobre o real aprendizado da turma, permitindo fazer correções no andamento da disciplina de forma rápida e pró-ativa.
+
+## Interesse dos alunos
+
+A Figura abaixo apresenta a nota média por questão que compõe o fator
+Interesse dos alunos.
+
+![Interesse dos alunos](media2.png)
+
+Os resultados mostram e o corpo docente notou que um diferencial desta
+turma é o engajamento e interesse em aprender. Os resultados também
+mostram que o conteúdo das disciplinas desperta o interesse dos alunos,
+uma vez que elas suprem necessidades que eles encontram no mercado de
+trabalho. No entanto, ainda deve-se buscar estratégias para incentivar a participação dos alunos durante as aulas.
+
+## Interação Professores-Alunos
+
+A Figura abaixo apresenta a nota média por questão que compõe o fator
+Interação Professores-Alunos.
+
+![Interação Professores-Alunos](media3.png)
+
+De forma geral verifica-se que a interação professores-aluno é bem
+sucedida no programa de Especialização em Data Science e Big Data.
+Um ponto que sucita melhorias são as avaliações que principalmente
+na disciplina de Linguagens de Programação foram avaliadas ligeiramente
+abaixo das demais. Porém, ainda com uma avaliação próxima a 4 o que
+considera-se bastante razoável.
+
+## Pertinência do conteúdo do curso
+
+Um ponto extremamente importante para um curso que versa sobre um assunto
+inovador e ainda pouco conhecido é a pertinência de seu conteúdo.
+A Figura abaixo mostra a nota média por questão que compõe o fator
+pertinência do conteúdo.
+
+![Pertinência do conteúdo do curso](media4.png)
+
+Verifica-se que o conteúdo e forma do curso estão atendendo as necessidades
+dos alunos. Entretanto, o fator tempo ainda é um aspecto a ser melhor
+explorado. Conversando com os alunos verificou-se que a quantidade de
+conteúdo passada durante as aulas é grande e consequentemente eles relatam
+dificuldades em absorver e exercitar todo o conteúdo. Obviamente, o
+fato dos alunos terem uma jornada de trabalho usual em torno de 40 horas
+semanais e o curso ocorrer todos os finais de semana é um fator importante
+para esse resultado. A coordenação está avaliando algumas estratégias
+para melhorar este aspecto as quais serão descritas na seção de discussão.
+De maneira geral verifica-se que as disciplinas do núcleo avançado Mineração de dados e Modelos estatísticos estão atendendo as expectativas dos alunos, no entanto a disciplina de Processamento de Big Data apresentou uma nota inferior a 3 o que consideramos como um sinal de alerta. Desta forma, indicaremos aos professores responsáveis a necessidade de revisar o conteúdo e a forma que este conteúdo está sendo ministrado aos alunos do programa.
+
+## Qualidade e organização do curso
+
+Finalmente o último bloco de questões corresponde ao fator qualidade
+e organização do curso, cujos resultados são apresentados na Figura abaixo.
+
+![Qualidade e organização do curso](media5.png)
+
+Resultados indicam que de forma geral o curso tem uma boa organização.
+Destaca-se a qualidade do material didático disponibilizado pelos professores,
+as relações que os professores traçam entre as disciplinas e o comprometimento
+dos professores com as ementas propostas.
+
+## Condições gerais do curso e infraestrutura oferecida
+
+De forma a complementar a avaliação do programa de especialização
+em Data Science e Big Data foi também mensurado a percepção dos
+alunos com relação a questões gerais do curso. A Figura abaixo apresenta o resultado
+deste conjunto de questões.
+
+![Avaliação geral DSBD](media_geral1.png)
+
+Os resultados mostram que o programa tem uma excelente avaliação por
+parte dos alunos que relatam comentar sobre o programa de forma positiva
+e que costumam recomendar o curso para seus colegas. Interessante verificar
+que grande parte pretende manter-se engajado no programa de alguma forma.
+Os conteúdos apresentados no curso estão contribuindo positivamente na
+vida profissional dos alunos. O engajamento das empresas nas quais eles
+trabalham ainda é um ponto a ser melhorado. Por fim, avaliamos a percepção
+dos alunos com relação a infraestrutura dos ambientes pedagógicos cujos resultados
+são apresentados na Figura abaixo.
+
+![Infraestrutura dos ambientes pedagógicos](media_geral2.png)
+
+Verifica-se que a quantidade de computadores é suficiente para atender
+a demanda dos alunos. A sala de aula tem tamanho adequado e encontra-se
+limpa e bem iluminada. No entanto, o conforto do mobiliado e a experiência 
+da hora do café devem ser melhorados.
+
+# Discussão
+
+# Apêndice
+![Média geral disciplinas](media_geral_disciplinas.png)
+![Média geral todos](media_geral_todos.png)
+![Nuvem de palavras dos comentários](nuvem de palavras.png)
+
+**Coordenação DSBD**
+
+Coordenador: Wagner Hugo Bonat LEG/UFPR
+
+Vice-Coordenador: Walmes Marques Zeviani LEG/UFPR
+
+Curitiba, XX de fevereiro de 20XX.
