@@ -358,7 +358,8 @@ analise <- function(nome,
   return(temp[[3]])
 }
 
-analise2 <- function(nome, token = "t5nr3wrju6ssk8cgkwwk4coo0wwsc8s"){
+analise2 <- function(nome, 
+                     token = "t5nr3wrju6ssk8cgkwwk4coo0wwsc8s"){
   temp <- limpa_dados2(nome = nome, token = token)
   db <- temp[[1]]
   db2 <- temp[[2]]

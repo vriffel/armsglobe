@@ -85,7 +85,8 @@ analise2 <- function(){
   da <- temp[[5]]
   geral <- temp[[6]]
   grupos <- cria_grupos2(db = db)
-  gera_graficos3(da = da, db = db, db2 = db2, dc = dc, dc2 = dc2, grupos = grupos)
+  gera_graficos3(da = da, db = db, 
+                 db2 = db2, dc = dc, dc2 = dc2, grupos = grupos)
   nuvem(geral)
   return(c(temp[[7]], temp[[8]]))
 }
@@ -102,3 +103,4 @@ analise <- function(){
   nuvem(da2 = da2)
   return(temp[[3]])
 }
+

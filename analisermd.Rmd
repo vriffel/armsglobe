@@ -4,11 +4,8 @@ author: "Coordenação DSBD"
 date: "Fevereiro 20XX"
 output: html_document
 ---
-  ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
-```{r echo=FALSE}
+```{r echo = FALSE, message = FALSE}
 #source(file =  "/home/dsbd/Desktop/myFuncs.R")
 #analise2(nome = "0?/2018")
 source(file =  "/home/dsbd/Desktop/funcsAux.R")
@@ -269,7 +266,6 @@ da hora do café devem ser melhorados.
 # Discussão
 
 # Apêndice
-![Média geral disciplinas](media_geral_disciplinas.png)
 ![Média geral todos](media_geral_todos.png)
 ![Nuvem de palavras dos comentários](nuvem de palavras.png)
 
