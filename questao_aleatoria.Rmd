@@ -1,0 +1,109 @@
+```{r data generation, echo = FALSE, results = "hide"}
+library(exams)
+data(mtcars)
+
+## Gabarito
+
+## 1.
+sum.vars <- sum(sapply(X = mtcars, FUN = var))
+sum.vars.1 <- sum.vars
+
+## 2.
+gear.tb <- table(mtcars$gear)
+gear.tb <- sort(gear.tb, decreasing = T)
+gear.tb.1 <- gear.tb
+
+## 3.
+sum.medians <- sum(sapply(X = mtcars, FUN = median))
+sum.medians.1 <- sum.medians
+
+## 4.
+sum.logs <- sum(log(sapply(mtcars, FUN = mean)), base = 5)
+sum.logs.1 <- sum.logs
+
+## Gera diversas provas
+while (TRUE) {
+    sorteio <- sample(1:4)
+    if (sorteio[1] == 1) {
+        gear.tb.1[1] <- gear.tb[2]
+        sum.medians.1 <- sum.medians -  25
+        break
+    }
+    if (sorteio[2] == 2) {
+        gear.tb.1[1] <- gear.tb[2]
+        sum.logs.1 <- sum.logs - 6
+        break
+    }
+    if (sorteio[3] == 3) {
+        sum.vars.1 <- sum.vars - 100
+        gear.tb.1[1] <- gear.tb[2]
+        break
+    }
+    if (sorteio[4] == 4) {
+        sum.vars.1 <- sum.vars - 100
+        sum.logs.1 <- sum.logs - 6
+        break
+    }
+}
+
+
+## Acha a questão correta
+
+## 1. e 4.
+if (sum.vars.1 == sum.vars & sum.logs == sum.logs.1) {
+    Answerlist <- c("* True", "\n* False",  "\n* False", "\n* False")
+    solution <- "1000"
+}
+
+## 3. e 1.
+if (sum.vars.1 == sum.vars & sum.medians == sum.medians.1) {
+    Answerlist <- c("* False", "\n* True", "\n* False", "\n* False")
+    solution <- "0100"
+}
+
+## 3. e 4.
+if (sum.medians == sum.medians.1 & sum.logs == sum.logs.1) {
+    Answerlist <- c("* False", "\n* False", "\n* True", "\n* False")
+    solution <- "0010"
+}
+
+## 3. e 2.
+if (sum.medians == sum.medians.1 & gear.tb.1[1] == gear.tb[1]) {
+    Answerlist <- c("* False", "\n* False", "\n* False", "\n* True")
+    solution <- "0001"
+}
+
+```
+Question
+========
+
+Considere o conjunto de dados *mtcars*.
+
+1. A soma das variâncias das colunas é `r sum.vars.1`
+2. A moda do número de marchas é `r gear.tb.1[1]`
+3. A soma das medianas das colunas é `r sum.medians.1`
+4. A soma dos logartimos (base 5) das médias das colunas é `r sum.logs.1`
+
+Selecione a opção correta:
+
+Answerlist
+----------
+* Alternativas 1. e 4. estão corretas.
+* Alternativas 1. e 3. estão corretas.
+* Alternativas 3. e 4. estão corretas.
+* Alternativas 3. e 2. estão corretas.
+
+Solution
+========
+
+Answerlist
+---------
+`r Answerlist`
+
+Meta-information
+=================
+
+exname: Nome do Exame
+extype: schoice
+exsolution: `r as.numeric(solution)`
+exshuffle: 4
