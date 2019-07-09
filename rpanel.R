@@ -1,194 +1,222 @@
 library(rpanel)
-## Uniforme
-unif.panel <- function(panel, mean = TRUE){
-    curve(dunif(x, min = panel$min,
-                max = panel$max),
-          from = panel$interval[1], to = panel$interval[2])
-    if (mean) {
-        abline(v = (panel$min[1] + panel$max)/2, col = "blue")
+norm_dist <- function() {
+    norm.panel <- function(panel){
+        ## panel$interval: vector with domain of function
+        ## panel$...: They'll be the parameters of the probability function
+        curve(dnorm(x, mean = panel$mean, sd = panel$sd),
+              from = panel$interval[1], to = panel$interval[2])
+        panel
     }
-    panel
+        ## It open the window and define the domain
+    panel <- rp.control(interval = c(-4,4))
+        ## It open the mean's slider
+    rp.slider(panel, mean, -4, 4, initval = 0, showvalue = TRUE,
+              action = norm.panel)
+        ## It open the standard deviation slider
+    rp.slider(panel, sd, 0.001, 10, initval = 1, showvalue = TRUE,
+              action = norm.panel)
 }
 
-panel <- rp.control(interval = c(-10, 15))
-
-rp.slider(panel, min, -5, 4.9, initval = -5, showvalue = T, action = unif.panel)
-
-rp.slider(panel, max, 5, 10, initval=10, showvalue=TRUE, action=unif.panel)
-
-## Exponencial
-
-exp.panel <- function(panel, mean = TRUE){
-    curve(dexp(x, rate=panel$rate),
-          from=panel$interval[1], to=panel$interval[2])
-    if (mean) {
-        abline(v = 1/(panel$rate), col = "blue")
+## Uniform Distribution
+unif_dist <- function(lgl) {
+    unif.panel <- function(panel, mean = lgl){
+        curve(dunif(x, min = panel$min, max = panel$max),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        if (lgl) {
+            abline(v = (panel$min[1] + panel$max) / 2, col = "blue")
+        }
+        panel
     }
-    panel
+    panel <- rp.control(interval = c(-10, 15))
+    rp.slider(panel, min, -5, 4.9, initval = -5, showvalue = TRUE,
+              action = unif.panel)
+    rp.slider(panel, max, 5, 10, initval = 10, showvalue = TRUE,
+              action = unif.panel)
 }
 
-panel <- rp.control(interval=c(0,5))
-
-rp.slider(panel, rate, 0.001, 10, initval=1, showvalue=TRUE, action=exp.panel)
-
-
-## Cauchy
-cauchy.panel <- function(panel){
-    curve(dcauchy(x, location = panel$location,
-                scale = panel$scale),
-          from = panel$interval[1], to = panel$interval[2])
-    panel
+## Exponencial Distribution
+exp_dist <- function(lgl){
+    exp.panel <- function(panel, mean = lgl){
+        curve(dexp(x, rate = panel$rate),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        if (lgl) {
+            abline(v = 1 / (panel$rate), col = "blue")
+        }
+        panel
+    }
+    panel <- rp.control(interval = c(0,5))
+    rp.slider(panel, rate, 0.001, 10, initval = 1, showvalue = TRUE,
+              action = exp.panel)
 }
 
-panel <- rp.control(interval = c(-20, 20))
-
-rp.slider(panel, location, -20, 20, initval = -20, showvalue = T, action = cauchy.panel)
-
-rp.slider(panel, scale, 0.001, 5, initval=0.001, showvalue=TRUE, action=cauchy.panel)
-
-
-## Chi Square Distribution
-chisq.panel <- function(panel){
-    curve(dt(x, df=panel$df, ncp = panel$ncp),
-          from=panel$interval[1], to=panel$interval[2])
+## Cauchy Distribution
+cauchy_dist <- function() {
+    cauchy.panel <- function(panel){
+        curve(dcauchy(x, location = panel$location, scale = panel$scale),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval = c(-20, 20))
+    rp.slider(panel, location, -20, 20, initval = -20, showvalue = T,
+              action = cauchy.panel)
+    rp.slider(panel, scale, 0.1, 5, initval = 0.001, showvalue = TRUE,
+              action = cauchy.panel)
 }
-
-panel <- rp.control(interval=c(0, 15))
-
-rp.slider(panel, df, 1, 10, initval=1, showvalue=TRUE, action=chisq.panel)
-
-rp.slider(panel, ncp, 0, 10, initval=1, showvalue=TRUE, action=chisq.panel)
 
 ## Snedecor Distribution
-f.panel <- function(panel){
-    curve(df(x, df1 = panel$df1, df2 = panel$df2,
-             ncp = panel$ncp),
-          from=panel$interval[1], to=panel$interval[2])
-    panel
+f_dist <- function() {
+    f.panel <- function(panel){
+        curve(df(x, df1 = panel$df1, df2 = panel$df2, ncp = panel$ncp),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval = c(0, 15))
+    rp.slider(panel, df1, 1, 10, initval = 2, showvalue = TRUE,
+              action = f.panel)
+    rp.slider(panel, df2, 1, 10, initval = 3, showvalue = TRUE,
+              action = f.panel)
+    rp.slider(panel, ncp, 1, 10, initval = 1, showvalue = TRUE,
+              action = f.panel)
 }
-
-panel <- rp.control(interval=c(0, 15))
-
-rp.slider(panel, df1, 1, 10, initval=2, showvalue=TRUE, action=f.panel)
-
-rp.slider(panel, df2, 1, 10, initval=3, showvalue=TRUE, action=f.panel)
-
-rp.slider(panel, ncp, 1, 10, initval=1, showvalue=TRUE, action=f.panel)
 
 ## Gamma Distribution
-gamma.panel <- function(panel){
-    curve(dgamma(x, shape = panel$shape, rate = panel$rate, ),
-          from=panel$interval[1], to=panel$interval[2])
-    panel
+gamma_dist <- function() {
+    gamma.panel <- function(panel){
+        curve(dgamma(x, shape = panel$shape, rate = panel$rate),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval = c(0, 15))
+    rp.slider(panel, shape, 0.001, 10, initval = 2, showvalue = TRUE,
+              action = gamma.panel)
+    rp.slider(panel, rate, 0.001, 10, initval = 3, showvalue = TRUE,
+              action = gamma.panel)
 }
-
-panel <- rp.control(interval=c(0, 15))
-
-rp.slider(panel, shape, 0.001, 10, initval=2, showvalue=TRUE, action=gamma.panel)
-
-rp.slider(panel, rate, 0.001, 10, initval=3, showvalue=TRUE, action=gamma.panel)
-
 
 ## Beta Distribution
-beta.panel <- function(panel){
-    curve(dbeta(x, shape1 = panel$shape1,
-                shape2 = panel$shape2,
-                ncp = panel$ncp),
-          from=panel$interval[1], to=panel$interval[2])
-    panel
+beta_dist <- function() {
+    beta.panel <- function(panel){
+        curve(dbeta(x, shape1 = panel$shape1, shape2 = panel$shape2,
+                    ncp = panel$ncp),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval = c(0, 1))
+    rp.slider(panel, shape1, 1, 10, initval = 2, showvalue = TRUE,
+              action = beta.panel)
+    rp.slider(panel, shape2, 1, 10, initval = 3, showvalue = TRUE,
+              action = beta.panel)
+    rp.slider(panel, ncp, 0, 10, initval = 0, showvalue = TRUE,
+              action = beta.panel)
 }
-
-panel <- rp.control(interval=c(0, 1))
-
-rp.slider(panel, shape1, 1, 10, initval=2, showvalue=TRUE, action = beta.panel)
-
-rp.slider(panel, shape2, 1, 10, initval=3, showvalue=TRUE, action = beta.panel)
-
-rp.slider(panel, ncp, 0, 10, initval = 0, showvalue=TRUE, action = beta.panel)
-
 
 ## Logistic Distribution
-logis.panel <- function(panel){
-    curve(dlogis(x, location  = panel$location,
-                scale = panel$scale),
-          from=panel$interval[1], to=panel$interval[2])
-    panel
+logis_dist <- function() {
+    logis.panel <- function(panel){
+        curve(dlogis(x, location  = panel$location, scale = panel$scale),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval = c(-6, 6))
+    rp.slider(panel, location, 0, 5, initval = 0, showvalue = TRUE,
+              action = logis.panel)
+    rp.slider(panel, scale, 1, 5, initval = 1, showvalue = TRUE,
+              action = logis.panel)
 }
 
-panel <- rp.control(interval=c(-6, 6))
-
-rp.slider(panel, location, 0, 5, initval = 0, showvalue=TRUE, action = logis.panel)
-
-rp.slider(panel, scale, 1, 5, initval = 1, showvalue=TRUE, action = logis.panel)
-
-########################################
+## Gosset Distribution
+t_dist <- function() {
+    t.panel <- function(panel){
+        curve(dt(x, df = panel$df),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y", xlim = c(-10, 10))
+    }
+    panel <- rp.control(interval = c(0, 15))
+    rp.slider(panel, df, 1, 15, initval = 1, showvalue = TRUE,
+              action = t.panel, resolution = 1)
+}
 
 ## Binomial Distribution
-binom.panel <- function(panel){
-    curve(dbinom(x, size  = panel$size,
-                 prob = panel$prob),
-          n = (panel$interval[2] + 1), type = "h",
-          from=panel$interval[1], to=panel$interval[2])
-    panel
+binom_dist <- function() {
+    binom.panel <- function(panel){
+        curve(dbinom(x, size  = panel$size, prob = panel$prob),
+              n = (panel$interval[2] + 1), type = "h",
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval=c(0, 20))
+    rp.slider(panel, size, 0, 20, initval = 0, showvalue=TRUE,
+              action = binom.panel, resolution = 1)
+    rp.slider(panel, prob, 0, 1, initval = 1, showvalue=TRUE,
+              action = binom.panel)
 }
-
-panel <- rp.control(interval=c(0, 20))
-
-rp.slider(panel, size, 0, 20, initval = 0, showvalue=TRUE, action = binom.panel,
-          resolution = 1)
-
-rp.slider(panel, prob, 0, 1, initval = 1, showvalue=TRUE, action = binom.panel)
-
 
 ## Poisson Distribution
-pois.panel <- function(panel){
-    curve(dpois(x, lambda  = panel$lambda), type = "h",
-          from=panel$interval[1], to=panel$interval[2])
-    panel
+pois_dist <- function() {
+    pois.panel <- function(panel){
+        curve(dpois(x, lambda  = panel$lambda),
+              type = "h", from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval = c(0, 20))
+    rp.slider(panel, lambda, 0, 20, initval = 0, showvalue = TRUE,
+              action = pois.panel, resolution = 1)
 }
-
-panel <- rp.control(interval=c(0, 20))
-
-rp.slider(panel, lambda, 0, 20, initval = 0, showvalue=TRUE, action = pois.panel,
-          resolution = 1)
 
 ## Hypergeometric Distribution
-hyper.panel <- function(panel){
-    curve(dhyper(x, m  = panel$m, n = 10,
-                 k = 6),
-          type = "h",
-          from=panel$interval[1], to=panel$interval[2])
-    panel
+hyper_dist <- function() {
+    hyper.panel <- function(panel){
+        curve(dhyper(x, m  = panel$m, n = 10, k = 10), type = "h",
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval = c(0, 10))
+    rp.slider(panel, m, 0, 100, initval = 0, showvalue = TRUE,
+              action = hyper.panel, resolution = 1)
 }
-
-panel <- rp.control(interval=c(0, 10))
-
-rp.slider(panel, m, 0, 20, initval = 0, showvalue=TRUE, action = hyper.panel,
-          resolution = 1)
-
-
-## Multinomial Distribution
-multinom.panel <- function(panel){
-    curve(dmultinom(x, size = 10, prob = panel$prob),
-          type = "h",
-          from=panel$interval[1], to=panel$interval[2])
-    panel
-}
-
-panel <- rp.control(interval=c(0, 20))
-
-rp.slider(panel, prob, 0, 1, initval = 0, showvalue=TRUE, action = multinom.panel)
 
 ## Negative Binomial
-dnbinom.panel <- function(panel){
-    curve(dnbinom(x, size = panel$size, prob = panel$prob),
-          type = "h",
-          from=panel$interval[1], to=panel$interval[2])
-    panel
+dnbinom_dist <- function(){
+    dnbinom.panel <- function(panel){
+        curve(dnbinom(x, size = panel$size, prob = panel$prob),
+              type = "h", from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        panel
+    }
+    panel <- rp.control(interval = c(0, 20))
+    rp.slider(panel, prob, 0.1, 1, initval = 0.1, showvalue = TRUE,
+              action = dnbinom.panel)
+    rp.slider(panel, size, 1, 10, initval = 1, showvalue = TRUE,
+              action = dnbinom.panel)
 }
 
-panel <- rp.control(interval=c(0, 20))
+view_dist <- function(dist, mean = TRUE) {
+    default <-
+        stop("The ", dist, " function it's not avaible. Please check the documentation for functions available")
+    switch(dist, "norm" = norm_dist(),
+           "unif" = unif_dist(mean),
+           "exp" = exp_dist(mean),
+           "cauchy" = cauchy_dist(),
+           "f" = f_dist(),
+           "gamma" = gamma_dist(),
+           "beta" = beta_dist(),
+           "logis" = logis_dist(),
+           "t" = t_dist(),
+           "binom" = binom_dist(),
+           "pois" = pois_dist(),
+           "hyper" = hyper_dist(),
+           "dnbinom" = dnbinom_dist(),
+           print(default))
+}
 
-rp.slider(panel, prob, 0.1, 1, initval = 0, showvalue=TRUE, action = dnbinom.panel)
-
-rp.slider(panel, size, 1, 10, initval = 1, showvalue=TRUE, action = dnbinom.panel)
+view_dist("a", mean = FALSE)
