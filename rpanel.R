@@ -1,4 +1,19 @@
 library(rpanel)
+chisq_dist <- function(lgl) {
+    chisq.panel <- function(panel, mean = lgl){
+        curve(dchisq(x, df = panel$df),
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        if (lgl) {
+            abline(v = panel$df, col = "blue")
+        }
+        panel
+    }
+    panel <- rp.control(interval = c(0, 20))
+    rp.slider(panel, df, 0.1, 10, initval = 0.1, showvalue = TRUE,
+              action = chisq.panel)
+}
+
 norm_dist <- function() {
     norm.panel <- function(panel){
         ## panel$interval: vector with domain of function
@@ -201,9 +216,8 @@ dnbinom_dist <- function(){
 }
 
 view_dist <- function(dist, mean = TRUE) {
-    default <-
-        stop("The ", dist, " function it's not avaible. Please check the documentation for functions available")
-    switch(dist, "norm" = norm_dist(),
+    switch(dist, "chisq" = chisq_dist(mean),
+           "norm" = norm_dist(),
            "unif" = unif_dist(mean),
            "exp" = exp_dist(mean),
            "cauchy" = cauchy_dist(),
@@ -216,7 +230,8 @@ view_dist <- function(dist, mean = TRUE) {
            "pois" = pois_dist(),
            "hyper" = hyper_dist(),
            "dnbinom" = dnbinom_dist(),
-           print(default))
+           stop("The ", dist, " distribution it's not avaible. ",
+                    "Please check the documentation for functions available"))
 }
 
-view_dist("a", mean = FALSE)
+view_dist("hyper", mean = TRUE)
