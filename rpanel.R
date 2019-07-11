@@ -14,12 +14,15 @@ chisq_dist <- function(lgl) {
               action = chisq.panel)
 }
 
-norm_dist <- function() {
+norm_dist <- function(lgl) {
     norm.panel <- function(panel){
         ## panel$interval: vector with domain of function
         ## panel$...: They'll be the parameters of the probability function
         curve(dnorm(x, mean = panel$mean, sd = panel$sd),
               from = panel$interval[1], to = panel$interval[2])
+        if (lgl) {
+            abline(v =  panel$mean, col = "blue")
+        }
         panel
     }
         ## It open the window and define the domain
@@ -82,11 +85,14 @@ cauchy_dist <- function() {
 }
 
 ## Snedecor Distribution
-f_dist <- function() {
+f_dist <- function(lgl) {
     f.panel <- function(panel){
         curve(df(x, df1 = panel$df1, df2 = panel$df2, ncp = panel$ncp),
               from = panel$interval[1], to = panel$interval[2],
               ylab = "y")
+        if (lgl) {
+            abline(v = (panel$df2) / (panel$df2 - 2), col = "blue")
+        }
         panel
     }
     panel <- rp.control(interval = c(0, 15))
@@ -99,11 +105,14 @@ f_dist <- function() {
 }
 
 ## Gamma Distribution
-gamma_dist <- function() {
+gamma_dist <- function(lgl) {
     gamma.panel <- function(panel){
         curve(dgamma(x, shape = panel$shape, rate = panel$rate),
               from = panel$interval[1], to = panel$interval[2],
               ylab = "y")
+        if (lgl) {
+            abline(v = (panel$shape/panel$rate), col = "blue")
+        }
         panel
     }
     panel <- rp.control(interval = c(0, 15))
@@ -114,12 +123,16 @@ gamma_dist <- function() {
 }
 
 ## Beta Distribution
-beta_dist <- function() {
+beta_dist <- function(lgl) {
     beta.panel <- function(panel){
         curve(dbeta(x, shape1 = panel$shape1, shape2 = panel$shape2,
                     ncp = panel$ncp),
               from = panel$interval[1], to = panel$interval[2],
               ylab = "y")
+        if (lgl) {
+            abline(v = (panel$shape1) / (panel$shape1 + panel$shape2),
+                   col = "blue")
+        }
         panel
     }
     panel <- rp.control(interval = c(0, 1))
@@ -132,11 +145,14 @@ beta_dist <- function() {
 }
 
 ## Logistic Distribution
-logis_dist <- function() {
+logis_dist <- function(lgl) {
     logis.panel <- function(panel){
         curve(dlogis(x, location  = panel$location, scale = panel$scale),
               from = panel$interval[1], to = panel$interval[2],
               ylab = "y")
+        if (lgl) {
+            abline(v = panel$location, col = "blue")
+        }
         panel
     }
     panel <- rp.control(interval = c(-6, 6))
@@ -147,24 +163,30 @@ logis_dist <- function() {
 }
 
 ## Gosset Distribution
-t_dist <- function() {
+t_dist <- function(lgl) {
     t.panel <- function(panel){
-        curve(dt(x, df = panel$df),
+        curve(dt(x, df = panel$df, ncp = panel$ncp),
               from = panel$interval[1], to = panel$interval[2],
-              ylab = "y", xlim = c(-10, 10))
+              ylab = "y", xlim = c(0, 15))
+        panel
     }
     panel <- rp.control(interval = c(0, 15))
+    rp.slider(panel, ncp, 1, 15, init = 1, showvalue = TRUE,
+              action = t.panel)
     rp.slider(panel, df, 1, 15, initval = 1, showvalue = TRUE,
               action = t.panel, resolution = 1)
 }
 
 ## Binomial Distribution
-binom_dist <- function() {
+binom_dist <- function(lgl) {
     binom.panel <- function(panel){
         curve(dbinom(x, size  = panel$size, prob = panel$prob),
               n = (panel$interval[2] + 1), type = "h",
               from = panel$interval[1], to = panel$interval[2],
               ylab = "y")
+        if (lgl) {
+            abline(v = panel$size * panel$prob, col = "blue")
+        }
         panel
     }
     panel <- rp.control(interval=c(0, 20))
@@ -175,16 +197,35 @@ binom_dist <- function() {
 }
 
 ## Poisson Distribution
-pois_dist <- function() {
+pois_dist <- function(lgl) {
     pois.panel <- function(panel){
         curve(dpois(x, lambda  = panel$lambda),
               type = "h", from = panel$interval[1], to = panel$interval[2],
               ylab = "y")
+        if (lgl) {
+            abline(v = panel$lambda, col = "blue")
+        }
         panel
     }
     panel <- rp.control(interval = c(0, 20))
     rp.slider(panel, lambda, 0, 20, initval = 0, showvalue = TRUE,
               action = pois.panel, resolution = 1)
+}
+
+## Geometric Distribution
+geom_dist <- function(lgl) {
+    geom.panel <- function(panel){
+        curve(dgeom(x, prob  = panel$prob), type = "h",
+              from = panel$interval[1], to = panel$interval[2],
+              ylab = "y")
+        if (lgl) {
+            abline(v = panel$prob/(panel$prob)^2, col = "blue")
+        }
+        panel
+    }
+    panel <- rp.control(interval = c(0, 20))
+    rp.slider(panel, prob, 0.01, 1, initval = 0.01, showvalue = TRUE,
+              action = geom.panel)
 }
 
 ## Hypergeometric Distribution
@@ -201,37 +242,41 @@ hyper_dist <- function() {
 }
 
 ## Negative Binomial
-dnbinom_dist <- function(){
-    dnbinom.panel <- function(panel){
+nbinom_dist <- function(lgl){
+    nbinom.panel <- function(panel){
         curve(dnbinom(x, size = panel$size, prob = panel$prob),
               type = "h", from = panel$interval[1], to = panel$interval[2],
               ylab = "y")
+        if (lgl) {
+            abline(v = (panel$size)/(panel$prob), col = "blue")
+        }
         panel
     }
     panel <- rp.control(interval = c(0, 20))
     rp.slider(panel, prob, 0.1, 1, initval = 0.1, showvalue = TRUE,
-              action = dnbinom.panel)
+              action = nbinom.panel)
     rp.slider(panel, size, 1, 10, initval = 1, showvalue = TRUE,
-              action = dnbinom.panel)
+              action = nbinom.panel)
 }
 
 view_dist <- function(dist, mean = TRUE) {
     switch(dist, "chisq" = chisq_dist(mean),
-           "norm" = norm_dist(),
+           "norm" = norm_dist(mean),
            "unif" = unif_dist(mean),
            "exp" = exp_dist(mean),
            "cauchy" = cauchy_dist(),
-           "f" = f_dist(),
-           "gamma" = gamma_dist(),
-           "beta" = beta_dist(),
-           "logis" = logis_dist(),
+           "f" = f_dist(mean),
+           "gamma" = gamma_dist(mean),
+           "beta" = beta_dist(mean),
+           "logis" = logis_dist(mean),
            "t" = t_dist(),
-           "binom" = binom_dist(),
-           "pois" = pois_dist(),
+           "binom" = binom_dist(mean),
+           "pois" = pois_dist(mean),
+           "geom" = geom_dist(mean),
            "hyper" = hyper_dist(),
-           "dnbinom" = dnbinom_dist(),
+           "nbinom" = nbinom_dist(mean),
            stop("The ", dist, " distribution it's not avaible. ",
                     "Please check the documentation for functions available"))
 }
 
-view_dist("hyper", mean = TRUE)
+view_dist("f", mean = TRUE)
