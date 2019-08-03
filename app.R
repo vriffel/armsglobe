@@ -11,14 +11,14 @@ ui <- fluidPage(
                     min = 1992, max = 2010, value = c(1992, 2010)),
         checkboxGroupInput(inputId = "use", label = "Select the use",
                            choices = c("ammo", "mil", "civ")),
-        plotOutput(outputId = "outplot"),
         tableOutput(outputId = "outtable"),
         uiOutput("outui"),
         tableOutput("table"),
-        textOutput("text"), #DEL
+        #textOutput("text"), #DEL
         actionButton("all", "Select All"),
         actionButton("none", "Select None"),
-        actionButton("button", "show")
+        actionButton("button", "show"),
+        mainPanel(plotOutput(outputId = "outplot"))
     )#sidebar
 )#fluipage
 
@@ -31,7 +31,8 @@ server <- function(input, output, session) {
                 year %in% seq(from = year_select[1], to = year_select[2],
                               by = 1) & imp == cty_select)
         assign("mychoices", unique(newdata$e), envir = globalenv())
-        output$text <- renderText({year_select})
+        assign("newdata", newdata, envir = globalenv())
+                                        #output$text <- renderText({year_select})
         output$outui <- renderUI({
             fluidRow(
                 checkboxGroupInput(inputId = "e_country",
