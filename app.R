@@ -16,7 +16,8 @@ ui <- fluidPage(
         uiOutput("outui"),
         tableOutput("table"),
         textOutput("text"), #DEL
-        actionButton("all", "Select All/none"),
+        actionButton("all", "Select All"),
+        actionButton("none", "Select None"),
         actionButton("button", "show")
     )#sidebar
 )#fluipage
@@ -43,6 +44,11 @@ server <- function(input, output, session) {
         updateCheckboxGroupInput(session, "e_country",
                                  choices = mychoices,
                                  selected = mychoices)
+    })
+    observeEvent(input$none, {
+        updateCheckboxGroupInput(session, "e_country",
+                                 choices = mychoices,
+                                 selected = NULL)
     })
 }
 
