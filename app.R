@@ -14,37 +14,35 @@ ui <- fluidPage(
         plotOutput(outputId = "outplot"),
         tableOutput(outputId = "outtable"),
         uiOutput("outui"),
-        tableOutput("text"),
-        actionButton("button2", "showw"),
+        tableOutput("table"),
+        textOutput("text"), #DEL
+        actionButton("all", "Select All/none"),
         actionButton("button", "show")
     )#sidebar
 )#fluipage
 
 server <- function(input, output, session) {
-    observe({
+    observeEvent(input$button, {
         year_select <- as.numeric(input$slider)
         cty_select <- input$i_country
         newdata <- all %>%
             filter(
-                seq(from = year[1], to = year[2], by = 1) %in%
-                year_select & imp == cty_select)
-        #output$text <- renderTable({newdata})
-        assign("newdata", newdata, envir = globalenv())
-    })
-    observe({
+                year %in% seq(from = year_select[1], to = year_select[2],
+                              by = 1) & imp == cty_select)
+        assign("mychoices", unique(newdata$e), envir = globalenv())
+        output$text <- renderText({year_select})
         output$outui <- renderUI({
             fluidRow(
                 checkboxGroupInput(inputId = "e_country",
                                    label = "Select the countries",
-                                   choices = unique(newdata$e),
-                                   selected = unique(newdata$e)),
-                checkboxInput("all", "Select All/None", value = TRUE))
+                                   choices = mychoices,
+                                   selected = mychoices))
         })
     })
-    observeEvent(input$button2, {
+    observeEvent(input$all, {
         updateCheckboxGroupInput(session, "e_country",
-                                 choices = unique(newdata$e),
-                                 selected = if (input$all) {unique(newdata$e)})
+                                 choices = mychoices,
+                                 selected = mychoices)
     })
 }
 
