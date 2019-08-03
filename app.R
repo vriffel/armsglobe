@@ -26,10 +26,11 @@ server <- function(input, output, session) {
     observeEvent(input$button, {
         year_select <- as.numeric(input$slider)
         cty_select <- input$i_country
+        use_select <- input$use
         newdata <- all %>%
             filter(
                 year %in% seq(from = year_select[1], to = year_select[2],
-                              by = 1) & imp == cty_select)
+                              by = 1) & imp %in% cty_select & wc %in% use_select)
         assign("mychoices", unique(newdata$e), envir = globalenv())
         assign("newdata", newdata, envir = globalenv())
                                         #output$text <- renderText({year_select})
