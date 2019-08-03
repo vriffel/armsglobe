@@ -14,12 +14,12 @@ ui <- fluidPage(
         tableOutput(outputId = "outtable"),
         uiOutput("outui"),
         tableOutput("table"),
-        #textOutput("text"), #DEL
+                                        #textOutput("text"), #DEL
         actionButton("all", "Select All"),
         actionButton("none", "Select None"),
-        actionButton("button", "show"),
-        mainPanel(plotOutput(outputId = "outplot"))
-    )#sidebar
+        actionButton("button", "show")
+    ), #sidebar
+    mainPanel(plotOutput(outputId = "outplot"))
 )#fluipage
 
 server <- function(input, output, session) {
@@ -39,6 +39,11 @@ server <- function(input, output, session) {
                                    label = "Select the countries",
                                    choices = mychoices,
                                    selected = mychoices))
+        })
+        output$outplot <- renderPlot({
+            ggplot(data = newdata,
+                   aes(x = year, y = v, col = e, shape = wc)) +
+                geom_point()
         })
     })
     observeEvent(input$all, {
