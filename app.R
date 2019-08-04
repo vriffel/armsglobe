@@ -3,53 +3,61 @@ library(shinydashboard)
 source("globalarm.R")
 
 ui <- dashboardPage(
-    dashboardHeader(title = "Global bla bla"),
+    dashboardHeader(title = "Small Arms and Ammunition - Imports & Exports"),
     dashboardSidebar(
         hr(),
         sidebarMenu(id = "tabs",
                     menuItem("Plot", tabName = "plot",
-                             icon = icon("chart-scatter"), selected = TRUE),
+                             icon = icon("chart-bar"), selected = TRUE),
                     menuItem("Table", tabName = "table", icon = icon("table")),
-                    menuItem("About", tabName = "About", icon = icon("question"))
+                    menuItem("About", tabName = "about", icon = icon("question"))
                     )
     ),
     dashboardBody(
-        tabItem(tabName = "plot",
-                fluidRow(
-                    column(width = 4,
-                           tabPanel(h5("parameters"),
-                                    selectInput(inputId = "i_country",
-                                                label = "Select the country",
-                                                choices = unique(all$imp)),
-                                    sliderInput(inputId = "slider",
-                                                label = "Select the years",
-                                                min = 1992, max = 2010,
-                                                value = c(1992, 2010)),
-                                    checkboxGroupInput(inputId = "use",
-                                                       label = "Select the use",
-                                                       choices = c("ammo", "mil",
-                                                                   "civ"),
-                                                       selected = c("ammo", "mil",
-                                                                    "civ")),
-                                    uiOutput("outui"),
-                                    actionButton("all", "Select All"),
-                                    actionButton("none", "Select None"),
-                                    actionButton("button", "Plot")
-                                    )
-                           ),
-                    column(width = 8,
-                           box(width = NULL, plotOutput("outplot", height = "500px"),
-                               collapsible = TRUE,
-                               title = "plot", status = "primary",
-                               solidHeader = TRUE)
-                           )
-                ))
-    ),
-    tabItem(tabName = "table",
-            box(width = NULL, status = "primary", solidHeader = TRUE,
-                title = "Table"), br(), br(),
-            tableOutput("table")
-            )
+        tabItems(
+            tabItem(tabName = "plot",
+                    fluidRow(
+                        column(width = 4,
+                               tabPanel(h5("parameters"),
+                                        selectInput(inputId = "i_country",
+                                                    label = "Select the country",
+                                                    choices =
+                                                        sort(unique(all$imp))),
+                                        sliderInput(inputId = "slider",
+                                                    label = "Select the years",
+                                                    min = 1992, max = 2010,
+                                                    value = c(1992, 2010)),
+                                        checkboxGroupInput(inputId = "use",
+                                                           label =
+                                                               "Select the use",
+                                                           choices = c("ammo",
+                                                                       "mil",
+                                                                       "civ"),
+                                                           selected = c("ammo",
+                                                                        "mil",
+                                                                        "civ")),
+                                        uiOutput("outui"),
+                                        actionButton("all", "Select All"),
+                                        actionButton("none", "Select None"),
+                                        actionButton("button", "Plot")
+                                        )
+                               ),
+                        column(width = 8,
+                               box(width = NULL, plotOutput("outplot",
+                                                            height = "500px"),
+                                   collapsible = TRUE,
+                                   title = "plot", status = "primary",
+                                   solidHeader = TRUE)
+                               )
+                    )),
+            tabItem(tabName = "table",
+                    box(width = NULL, status = "primary", solidHeader = TRUE,
+                        title = "Table", br(), br(),
+                        tableOutput("table")
+                        )
+                    )
+        )
+    )
 )
 
 server <- function(input, output, session) {
@@ -63,10 +71,10 @@ server <- function(input, output, session) {
                               by = 1) & imp %in% cty_select & wc %in% use_select)
         assign("mychoices", unique(newdata$e), envir = globalenv())
         output$outui <- renderUI({
-                checkboxGroupInput(inputId = "e_country",
-                                   label = "Select the countries",
-                                   choices = mychoices,
-                                   selected = NULL)
+            checkboxGroupInput(inputId = "e_country",
+                               label = "Select the countries",
+                               choices = mychoices,
+                               selected = NULL)
         })
         assign("newdata", newdata, envir = globalenv())
     }) #qualquer att
@@ -77,7 +85,11 @@ server <- function(input, output, session) {
                    aes(x = year, y = v, col = e, shape = wc)) +
                 geom_point()
         })
-        output$table <- renderTable({newdata})
+        output$table <- renderTable({
+            names(newdata) <- c("Years", "Importer", "Use", "Exporter",
+                                "Total Value ($)")
+            newdata
+        })
     })
     observeEvent(input$all, {
         updateCheckboxGroupInput(session, "e_country",
