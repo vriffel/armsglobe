@@ -1,6 +1,6 @@
 library(shiny)
 library(shinydashboard)
-source("globalarm.R")
+source("armglobal.R")
 
 ui <- dashboardPage(
     dashboardHeader(title = "Small Arms and Ammunition - Imports & Exports"),
