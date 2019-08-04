@@ -1,26 +1,56 @@
 library(shiny)
+library(shinydashboard)
 source("globalarm.R")
 
-ui <- fluidPage(
-    titlePanel(NULL),
-    sidebarPanel(
-        selectInput(inputId = "i_country",
-                    label = "Select the country",
-                    choices = unique(all$imp)),
-        sliderInput(inputId = "slider", label = "Select the years",
-                    min = 1992, max = 2010, value = c(1992, 2010)),
-        checkboxGroupInput(inputId = "use", label = "Select the use",
-                           choices = c("ammo", "mil", "civ"),
-                           selected = c("ammo", "mil", "civ")),
-        tableOutput(outputId = "outtable"),
-        uiOutput("outui"),
-        #textOutput("text"), #DEL
-        actionButton("all", "Select All"),
-        actionButton("none", "Select None"),
-        actionButton("button", "show")
-    ), #sidebar
-    mainPanel(plotOutput(outputId = "outplot"), tableOutput("table"))
-)#fluipage
+ui <- dashboardPage(
+    dashboardHeader(title = "Global bla bla"),
+    dashboardSidebar(
+        hr(),
+        sidebarMenu(id = "tabs",
+                    menuItem("Plot", tabName = "plot",
+                             icon = icon("chart-scatter"), selected = TRUE),
+                    menuItem("Table", tabName = "table", icon = icon("table")),
+                    menuItem("About", tabName = "About", icon = icon("question"))
+                    )
+    ),
+    dashboardBody(
+        tabItem(tabName = "plot",
+                fluidRow(
+                    column(width = 4,
+                           tabPanel(h5("parameters"),
+                                    selectInput(inputId = "i_country",
+                                                label = "Select the country",
+                                                choices = unique(all$imp)),
+                                    sliderInput(inputId = "slider",
+                                                label = "Select the years",
+                                                min = 1992, max = 2010,
+                                                value = c(1992, 2010)),
+                                    checkboxGroupInput(inputId = "use",
+                                                       label = "Select the use",
+                                                       choices = c("ammo", "mil",
+                                                                   "civ"),
+                                                       selected = c("ammo", "mil",
+                                                                    "civ")),
+                                    uiOutput("outui"),
+                                    actionButton("all", "Select All"),
+                                    actionButton("none", "Select None"),
+                                    actionButton("button", "Plot")
+                                    )
+                           ),
+                    column(width = 8,
+                           box(width = NULL, plotOutput("outplot", height = "500px"),
+                               collapsible = TRUE,
+                               title = "plot", status = "primary",
+                               solidHeader = TRUE)
+                           )
+                ))
+    ),
+    tabItem(tabName = "table",
+            box(width = NULL, status = "primary", solidHeader = TRUE,
+                title = "Table"), br(), br(),
+            tableOutput("table")
+            )
+)
 
 server <- function(input, output, session) {
     observeEvent(c(input$i_country, input$use, input$slider), {
@@ -33,11 +63,10 @@ server <- function(input, output, session) {
                               by = 1) & imp %in% cty_select & wc %in% use_select)
         assign("mychoices", unique(newdata$e), envir = globalenv())
         output$outui <- renderUI({
-            fluidRow(
                 checkboxGroupInput(inputId = "e_country",
                                    label = "Select the countries",
                                    choices = mychoices,
-                                   selected = NULL))
+                                   selected = NULL)
         })
         assign("newdata", newdata, envir = globalenv())
     }) #qualquer att
