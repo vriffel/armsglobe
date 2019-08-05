@@ -1,6 +1,10 @@
-library(shiny)
-library(shinydashboard)
-source("armglobal.R")
+#-------------------------------------------------------------------------------
+
+## Get the packages and data
+source("armsglobe.R")
+
+#-------------------------------------------------------------------------------
+## User Interface
 
 ui <- dashboardPage(
     dashboardHeader(title = "Small Arms and Ammunition - Imports & Exports"),
@@ -60,6 +64,9 @@ ui <- dashboardPage(
     )
 )
 
+#-------------------------------------------------------------------------------
+## Server
+
 server <- function(input, output, session) {
     observeEvent(c(input$i_country, input$use, input$slider), {
         year_select <- as.numeric(input$slider)
@@ -69,6 +76,7 @@ server <- function(input, output, session) {
             filter(
                 year %in% seq(from = year_select[1], to = year_select[2],
                               by = 1) & imp %in% cty_select & wc %in% use_select)
+        ## mychoices is going to be used in the next observeEvent
         assign("mychoices", unique(newdata$e), envir = globalenv())
         output$outui <- renderUI({
             checkboxGroupInput(inputId = "e_country",
@@ -76,8 +84,9 @@ server <- function(input, output, session) {
                                choices = mychoices,
                                selected = NULL)
         })
+        ## newdata is going to be used in the next observeEvent
         assign("newdata", newdata, envir = globalenv())
-    }) #qualquer att
+    })
     observeEvent(input$button, {
         newdata <- newdata %>% filter(e %in% input$e_country)
         output$outplot <- renderPlot({
@@ -91,16 +100,20 @@ server <- function(input, output, session) {
             newdata
         })
     })
+    ## Select all button
     observeEvent(input$all, {
         updateCheckboxGroupInput(session, "e_country",
                                  choices = mychoices,
                                  selected = mychoices)
     })
+    ## Select none button
     observeEvent(input$none, {
         updateCheckboxGroupInput(session, "e_country",
                                  choices = mychoices,
                                  selected = NULL)
     })
 }
+
+#-------------------------------------------------------------------------------
 
 shinyApp(ui, server)
