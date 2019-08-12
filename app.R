@@ -42,8 +42,7 @@ ui <- dashboardPage(
                                                                         "civ")),
                                         uiOutput("outui"),
                                         actionButton("all", "Select All"),
-                                        actionButton("none", "Select None"),
-                                        actionButton("button", "Plot")
+                                        actionButton("none", "Select None")
                                         )
                                ),
                         column(width = 8,
@@ -68,7 +67,8 @@ ui <- dashboardPage(
 ## Server
 
 server <- function(input, output, session) {
-    observeEvent(c(input$i_country, input$use, input$slider), {
+    ## Filter Data
+    observe({
         year_select <- as.numeric(input$slider)
         cty_select <- input$i_country
         use_select <- input$use
@@ -76,8 +76,12 @@ server <- function(input, output, session) {
             filter(
                 year %in% seq(from = year_select[1], to = year_select[2],
                               by = 1) & imp %in% cty_select & wc %in% use_select)
-        ## mychoices is going to be used in the next observeEvent
+        ## mychoices and newdata is going to be used in the next observeEvent
+        assign("newdata", newdata, envir = globalenv())
         assign("mychoices", unique(newdata$e), envir = globalenv())
+    })
+    ## Render UI
+    observeEvent(c(input$i_country, input$use), {
         output$outui <- renderUI({
             checkboxGroupInput(inputId = "e_country",
                                label = "Select the countries",
@@ -87,7 +91,8 @@ server <- function(input, output, session) {
         ## newdata is going to be used in the next observeEvent
         assign("newdata", newdata, envir = globalenv())
     })
-    observeEvent(input$button, {
+    ## Plot
+    observeEvent(c(input$i_country, input$slider, input$use, input$e_country), {
         newdata <- newdata %>% filter(e %in% input$e_country)
         output$outplot <- renderPlot({
             ggplot(data = newdata,
