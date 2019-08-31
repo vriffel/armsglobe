@@ -1,23 +1,21 @@
-#-------------------------------------------------------------------------------
-
-## Get the packages and data
-source("armsglobe.R")
-
-#-------------------------------------------------------------------------------
-## User Interface
+library(shiny)
+library(shinydashboard)
+source("armglobal.R")
 
 ui <- dashboardPage(
-    dashboardHeader(title = "Small Arms and Ammunition - Imports & Exports"),
+    dashboardHeader(title = "Arms Globe"),
     dashboardSidebar(
         hr(),
         sidebarMenu(id = "tabs",
                     menuItem("Plot", tabName = "plot",
-                             icon = icon("chart-bar"), selected = TRUE),
+                             icon = icon("chart-bar")),
                     menuItem("Table", tabName = "table", icon = icon("table")),
-                    menuItem("About", tabName = "about", icon = icon("question"))
+                    menuItem("About", tabName = "about", icon = icon("question"),
+                             selected = TRUE)
                     )
     ),
     dashboardBody(
+        includeCSS("styles.css"),
         tabItems(
             tabItem(tabName = "plot",
                     fluidRow(
@@ -42,7 +40,8 @@ ui <- dashboardPage(
                                                                         "civ")),
                                         uiOutput("outui"),
                                         actionButton("all", "Select All"),
-                                        actionButton("none", "Select None")
+                                        actionButton("none", "Select None"),
+                                        actionButton("exit", "Exit")
                                         )
                                ),
                         column(width = 8,
@@ -58,17 +57,22 @@ ui <- dashboardPage(
                         title = "Table", br(), br(),
                         tableOutput("table")
                         )
-                    )
-        )
-    )
+                    ),
+            tabItem(tabName = "about",
+                    tags$body("These data were taken from Google Data Arts Team.
+ The data is about trade government-authorized small arms and ammunition from
+ 1992 to 2010.", br(), "In the plot tab you going to find the plot and its
+ parameters.", br(), "In the table tab you going to find the dataset created
+ from the parameters.", br(), "You can get these dataset and more information "),
+ tags$a("here.", href = "https://github.com/dataarts/armsglobe"),
+ tags$body(br(), "You can find the code of this shiny application "),
+ tags$a("here.", href = "https://github.com/vriffel/armsglobe"), hr(),
+ tags$body("Contact me if you find any problem: viniciusriffel@ufpr.br")
+ )))
 )
 
-#-------------------------------------------------------------------------------
-## Server
-
 server <- function(input, output, session) {
-    ## Filter Data
-    observe({
+    observeEvent(c(input$i_country, input$use, input$slider), {
         year_select <- as.numeric(input$slider)
         cty_select <- input$i_country
         use_select <- input$use
@@ -76,28 +80,23 @@ server <- function(input, output, session) {
             filter(
                 year %in% seq(from = year_select[1], to = year_select[2],
                               by = 1) & imp %in% cty_select & wc %in% use_select)
-        ## mychoices and newdata is going to be used in the next observeEvent
-        assign("newdata", newdata, envir = globalenv())
         assign("mychoices", unique(newdata$e), envir = globalenv())
-    })
-    ## Render UI
-    observeEvent(c(input$i_country, input$use), {
         output$outui <- renderUI({
             checkboxGroupInput(inputId = "e_country",
                                label = "Select the countries",
                                choices = mychoices,
                                selected = NULL)
         })
-        ## newdata is going to be used in the next observeEvent
         assign("newdata", newdata, envir = globalenv())
     })
-    ## Plot
-    observeEvent(c(input$i_country, input$slider, input$use, input$e_country), {
+    observeEvent(c(input$i_country, input$use, input$slider, input$e_country), {
         newdata <- newdata %>% filter(e %in% input$e_country)
         output$outplot <- renderPlot({
             ggplot(data = newdata,
                    aes(x = year, y = v, col = e, shape = wc)) +
-                geom_point()
+                geom_point(size = 3) +
+                ylab("Value ($)") +
+                theme_minimal()
         })
         output$table <- renderTable({
             names(newdata) <- c("Years", "Importer", "Use", "Exporter",
@@ -105,20 +104,19 @@ server <- function(input, output, session) {
             newdata
         })
     })
-    ## Select all button
     observeEvent(input$all, {
         updateCheckboxGroupInput(session, "e_country",
                                  choices = mychoices,
                                  selected = mychoices)
     })
-    ## Select none button
     observeEvent(input$none, {
         updateCheckboxGroupInput(session, "e_country",
                                  choices = mychoices,
                                  selected = NULL)
     })
+    observeEvent(input$exit, {
+        stopApp()
+    })
 }
-
-#-------------------------------------------------------------------------------
 
 shinyApp(ui, server)
