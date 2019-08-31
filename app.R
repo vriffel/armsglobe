@@ -60,7 +60,7 @@ ui <- dashboardPage(
                     ),
             tabItem(tabName = "about",
                     tags$body("These data were taken from Google Data Arts Team.
- The data is about trade government-authorized small arms and ammunition from
+ The data is about government-authorized small arms and ammunition trade from
  1992 to 2010.", br(), "In the plot tab you going to find the plot and its
  parameters.", br(), "In the table tab you going to find the dataset created
  from the parameters.", br(), "You can get these dataset and more information "),
