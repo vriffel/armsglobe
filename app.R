@@ -1,6 +1,6 @@
 library(shiny)
 library(shinydashboard)
-source("armglobal.R")
+source("armsglobe.R")
 
 ui <- dashboardPage(
     dashboardHeader(title = "Arms Globe"),
